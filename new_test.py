@@ -1,12 +1,14 @@
 import pymongo
 import requests
 from bs4 import BeautifulSoup
+import time
 
 myclient = pymongo.MongoClient('mongodb://139.155.103.174:27017/')
 mydb = myclient['game']
-mycollection = mydb['famous_game']
-this_collection = mydb['youmin_score']
+mycollection = mydb['famous_game_new']
+this_collection = mydb['youmin_score_new']
 for game in mycollection.find().batch_size(500):
+    time.sleep(0.5)
     game_name = game['name']
     year = game['year']
     detail_link = game['link']
@@ -16,6 +18,7 @@ for game in mycollection.find().batch_size(500):
     info_dict['year'] = year
     info_dict['link'] = detail_link
     info_dict['img'] = img
+    info_dict['user_score'] = game['user_score']
     res2 = requests.get(detail_link)
     res2.encoding = 'utf-8'
     soup = BeautifulSoup(res2.text, "html.parser")
