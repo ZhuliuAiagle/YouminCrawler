@@ -1,5 +1,20 @@
-[INFO  - 2019-07-10T02:46:54.595Z] GhostDriver - Main - running on port 14843
-[INFO  - 2019-07-10T02:46:58.859Z] Session [fcb17370-a2bc-11e9-ae3a-69bebad6797e] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
-[INFO  - 2019-07-10T02:46:58.859Z] Session [fcb17370-a2bc-11e9-ae3a-69bebad6797e] - page.customHeaders:  - {}
-[INFO  - 2019-07-10T02:46:58.859Z] Session [fcb17370-a2bc-11e9-ae3a-69bebad6797e] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"windows-10-32bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
-[INFO  - 2019-07-10T02:46:58.859Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: fcb17370-a2bc-11e9-ae3a-69bebad6797e[INFO  - 2019-07-10T02:47:24.214Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2019-07-11T04:22:56.965Z] GhostDriver - Main - running on port 6135
+[INFO  - 2019-07-11T04:23:01.366Z] Session [91d3fd20-a393-11e9-aed2-8d0246ca77b1] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2019-07-11T04:23:01.366Z] Session [91d3fd20-a393-11e9-aed2-8d0246ca77b1] - page.customHeaders:  - {}
+[INFO  - 2019-07-11T04:23:01.366Z] Session [91d3fd20-a393-11e9-aed2-8d0246ca77b1] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"windows-10-32bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2019-07-11T04:23:01.366Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: 91d3fd20-a393-11e9-aed2-8d0246ca77b1
+[ERROR - 2019-07-11T04:23:07.873Z] Session [91d3fd20-a393-11e9-aed2-8d0246ca77b1] - page.onError - msg: ReferenceError: Can't find variable: Map
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2019-07-11T04:23:07.874Z] Session [91d3fd20-a393-11e9-aed2-8d0246ca77b1] - page.onError - stack:
+  h (http://j.gamersky.com/js/web2015/ku/js/??jquery.gamersky.video.js,zp_content.js,zp_layer_new.js,?20190419:1)
+  success (http://j.gamersky.com/js/web2015/ku/js/??jquery.gamersky.video.js,zp_content.js,zp_layer_new.js,?20190419:1)
+  fire (http://j.gamersky.com/g/jquery-1.8.3.js:1)
+  fireWith (http://j.gamersky.com/g/jquery-1.8.3.js:1)
+  done (http://j.gamersky.com/g/jquery-1.8.3.js:1)
+  onreadystatechange (http://j.gamersky.com/g/jquery-1.8.3.js:1)
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2019-07-11T04:23:09.773Z] WebElementLocator - _handleLocateCommand - Element(s) NOT Found: GAVE UP. Search Stop Time: 1562818989746
+
+  phantomjs://platform/console++.js:263 in error

@@ -5,11 +5,11 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 import json
+import time
 
 myclient = pymongo.MongoClient('mongodb://139.155.103.174:27017/')
 mydb = myclient['game_backup']
 mycollection = mydb['game']
-this_collection = mydb['youmin_data']
 
 
 count = 0
@@ -31,8 +31,15 @@ for content in mycollection.find().batch_size(500):
     # 特征值，选择是用谁的
     eigen = rule.sub("", real_name)
     # 可以选择用特征值搜，也可以用真实名字搜
-    res = requests.get(url + real_name)
-    res.encoding = 'utf-8'
+    res = ""
+    try:
+        res = requests.get(url + real_name)
+        res.encoding = 'utf-8'
+    except:
+        print("Banned by remote server. stop 10s.")
+        time.sleep(10)
+        res = requests.get(url + real_name)
+        res.encoding = 'utf-8'
     soup = BeautifulSoup(res.text,"html.parser")
     myAttrs = {'class':'ImgY'}
     innerAttrs = {'class': 't1'}
@@ -62,11 +69,35 @@ for content in mycollection.find().batch_size(500):
             count_result += 1
             # 获取到了名称与详细链接
             #访问该详细链接
-            res2 = requests.get(detail_link)
-            res2.encoding = 'utf-8'
+            res2 = ""
+            try:
+                res2 = requests.get(detail_link)
+                res2.encoding = 'utf-8'
+            except:
+                print("Banned by remote server. stop 10s.")
+                time.sleep(10)
+                res2 = requests.get(detail_link)
+                res2.encoding = 'utf-8'
             soup = BeautifulSoup(res2.text, "html.parser")
+            if(len(soup.findAll('div',attrs={'class':'tit_CH'})) > 0):
+                cnFullName = soup.findAll('div',attrs={'class':'tit_CH'})[0].string
+                enFullName = soup.findAll('div',attrs={'class':'tit_EN'})[0].string
+                gameId = soup.findAll('div',attrs={'class':'tit_CH'})[0].attrs['gameid']
+                info_dict['cnFullName'] = cnFullName
+                info_dict['enFullName'] = enFullName
+                info_dict['gameId'] = gameId
+            if(len(soup.findAll('ul',attrs={'class':'Bimg'})) <= 0):
+                try:
+                    if(not(content.__contains__('youminData'))):
+                        mycollection.update_one({'_id':content['_id']},{'$set':{ 'youminData' : info_dict }})
+                except:
+                    print("Banned by db server. stop 10s.")
+                    time.sleep(10)
+                    if(not(content.__contains__('youminData'))):
+                        mycollection.update_one({'_id':content['_id']},{'$set':{ 'youminData' : info_dict }})
+                continue
             ul = soup.findAll('ul',attrs={'class':'Bimg'})[0]
-            if(len(ul.findAll('span',attrs=innerAttrs)) > 0):
+            if(len(ul.findAll('span',attrs={'class':'t1'})) > 0):
                 t = ul.findAll('a')
                 li = []
                 for k in t:
@@ -80,19 +111,36 @@ for content in mycollection.find().batch_size(500):
                     it["full_score"] = float(at_2[1:])
                     it["website"] = at_3
                     li.append(it)
-                if(len(li) >= 7):
-                    good_game += 1
                 # 机构评分
                 info_dict['score'] = li
-                count_score += 1
+            if(len(soup.findAll('div', attrs={'class':'Slidepic'})) > 0):
+                comp_li = []
+                compete_list = soup.findAll('div', attrs={'class':'Slidepic'})[0]
+                compete_list = compete_list.findAll('li')
+                for i in compete_list:
+                    comp_di = {}
+                    link = i.find('a').attrs['href']
+                    img = i.find('img').attrs['src']
+                    name = i.find('p').string
+                    comp_di['link'] = link
+                    comp_di['img']  = img
+                    comp_di['name'] = name
+                    comp_li.append(comp_di)
+                info_dict['competitorInfo'] = comp_li
         else:
             continue
-
     else:
         continue
     # print(json.dumps(info_dict,indent=1,ensure_ascii=False))
     # print("")
-    # mycollection.update_one({'_id':content['_id']},{'$set':{ 'youmin_info' : info_dict }})
-    this_collection.insert_one(info_dict)
-    if( count % 100 == 0 ):
-        print(str(good_game), "/" ,str(count_score) , "/" + str(count_result) , "/" , str(count))
+    try:
+        if(not(content.__contains__('youminData'))):
+            mycollection.update_one({'_id':content['_id']},{'$set':{ 'youminData' : info_dict }})
+    except:
+        print("Banned by db server. stop 10s.")
+        time.sleep(10)
+        if(not(content.__contains__('youminData'))):
+            mycollection.update_one({'_id':content['_id']},{'$set':{ 'youminData' : info_dict }})
+    # this_collection.insert_one(info_dict)
+    if( count % 10 == 0 ):
+        print(str(count_result) , "/" , str(count))

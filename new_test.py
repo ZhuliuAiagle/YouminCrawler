@@ -6,9 +6,9 @@ import time
 myclient = pymongo.MongoClient('mongodb://139.155.103.174:27017/')
 mydb = myclient['game']
 mycollection = mydb['famous_game_new']
-this_collection = mydb['youmin_score_new']
+thatdb = myclient['game']
+this_collection = thatdb['youminScoreNew']
 for game in mycollection.find().batch_size(500):
-    time.sleep(0.5)
     game_name = game['name']
     year = game['year']
     detail_link = game['link']
@@ -18,10 +18,24 @@ for game in mycollection.find().batch_size(500):
     info_dict['year'] = year
     info_dict['link'] = detail_link
     info_dict['img'] = img
-    info_dict['user_score'] = game['user_score']
-    res2 = requests.get(detail_link)
-    res2.encoding = 'utf-8'
+    info_dict['userScore'] = game['user_score']
+    res2 = ""
+    try:
+        res2 = requests.get(detail_link)
+        res2.encoding = 'utf-8'
+    except:
+        print("Banned by remote server. stop 10s.")
+        time.sleep(10)
+        res2 = requests.get(detail_link)
+        res2.encoding = 'utf-8'
     soup = BeautifulSoup(res2.text, "html.parser")
+    if(len(soup.findAll('div',attrs={'class':'tit_CH'})) > 0):
+        cnFullName = soup.findAll('div',attrs={'class':'tit_CH'})[0].string
+        enFullName = soup.findAll('div',attrs={'class':'tit_EN'})[0].string
+        gameId = soup.findAll('div',attrs={'class':'tit_CH'})[0].attrs['gameid']
+        info_dict['cnFullName'] = cnFullName
+        info_dict['enFullName'] = enFullName
+        info_dict['gameId'] = gameId
     if(len(soup.findAll('ul',attrs={'class':'Bimg'})) <= 0):
         this_collection.insert_one(info_dict)
         continue
@@ -42,7 +56,20 @@ for game in mycollection.find().batch_size(500):
             li.append(it)
         # 机构评分
         info_dict['score'] = li
+    if(len(soup.findAll('div', attrs={'class':'Slidepic'})) > 0):
+        comp_li = []
+        compete_list = soup.findAll('div', attrs={'class':'Slidepic'})[0]
+        compete_list = compete_list.findAll('li')
+        for i in compete_list:
+            comp_di = {}
+            link = i.find('a').attrs['href']
+            img = i.find('img').attrs['src']
+            name = i.find('p').string
+            comp_di['link'] = link
+            comp_di['img']  = img
+            comp_di['name'] = name
+            comp_li.append(comp_di)
+        info_dict['competitorInfo'] = comp_li
     this_collection.insert_one(info_dict)
 print("finished")
-
 
