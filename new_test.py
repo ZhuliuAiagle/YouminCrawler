@@ -44,6 +44,12 @@ for game in mycollection.find().batch_size(500):
         t = ul.findAll('a')
         li = []
         for k in t:
+            text = str(k.attrs['data-txt'])
+            if(text == None):
+                text = ""
+            else:
+                text = text.strip()
+                text = text[3:-4]
             i = k.find('span',attrs={'class':'t1'})
             j = k.find('span',attrs={'class':'t2'})
             it = {}
@@ -53,6 +59,7 @@ for game in mycollection.find().batch_size(500):
             it["real_score"] = float(at_1)
             it["full_score"] = float(at_2[1:])
             it["website"] = at_3
+            it["comment"] = text
             li.append(it)
         # 机构评分
         info_dict['score'] = li

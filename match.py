@@ -9,7 +9,7 @@ to_collection = mydb['youminScoreNew']
 count = 0
 all_count = 0
 print("hahaha")
-for element in to_collection.find().batch_size(500):
+for element in to_collection.find().batch_size(2000):
     cnFullName = "NAAAAAAAAAAA"
     enFullName = "NAAAAAAAAAAA"
     shortName = "NAAAAAAAAAAA"
